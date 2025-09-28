@@ -15,7 +15,7 @@ export class CreateCourseDto {
   code: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsNotEmpty({ message: 'Nome não pode ser vazio' })
   name: string;
 
   @IsString()
@@ -25,10 +25,15 @@ export class CreateCourseDto {
   @IsNumber()
   hoursTotal: number;
 
-  @IsIn(['Básico', 'Intermediário', 'Avançado'])
+  @IsIn(['Básico', 'Intermediário', 'Avançado'], {
+    message:
+      'Level deve ser um dos seguintes valores: Básico, Intermediário, Avançado',
+  })
   level: 'Básico' | 'Intermediário' | 'Avançado';
 
-  @IsIn(['Presencial', 'EAD', 'Híbrido'])
+  @IsIn(['Presencial', 'EAD', 'Híbrido'], {
+    message: 'Type deve ser um dos seguintes valores: Presencial, EAD, Híbrido',
+  })
   type: 'Presencial' | 'EAD' | 'Híbrido';
 
   @IsArray()
