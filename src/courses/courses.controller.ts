@@ -7,12 +7,15 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { LoggingInterceptor } from 'src/interceptors/logging/logging.interceptor';
 
 @Controller('courses')
+@UseInterceptors(LoggingInterceptor)
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
