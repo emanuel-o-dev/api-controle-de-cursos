@@ -10,11 +10,11 @@ import {
 } from 'class-validator';
 
 export class CreateCourseDto {
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Código deve ser uma string' })
+  @IsNotEmpty({ message: 'Código não pode ser vazio' })
   code: string;
 
-  @IsString()
+  @IsString({ message: 'Nome deve ser uma string' })
   @IsNotEmpty({ message: 'Nome não pode ser vazio' })
   name: string;
 
@@ -22,7 +22,7 @@ export class CreateCourseDto {
   @IsOptional()
   description?: string;
 
-  @IsNumber()
+  @IsNumber({}, { message: 'hoursTotal deve ser um número' })
   hoursTotal: number;
 
   @IsIn(['Básico', 'Intermediário', 'Avançado'], {
