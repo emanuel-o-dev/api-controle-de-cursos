@@ -1,4 +1,3 @@
-// src/courses/interceptors/logging.interceptor.ts
 import {
   Injectable,
   NestInterceptor,
