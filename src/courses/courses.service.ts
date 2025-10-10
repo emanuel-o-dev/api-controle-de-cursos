@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Course } from './entities/course.entity';
 import { coursesSeed } from './courses.seed';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { CourseNotFoundException } from '../filters/course-not-found.exception';
 
 @Injectable()
 export class CoursesService {
@@ -21,7 +22,9 @@ export class CoursesService {
 
   findOne(id: number): Course {
     const course = this.courses.find((c) => c.id === id);
-    if (!course) throw new NotFoundException(`Curso ${id} não encontrado`);
+    if (!course) {
+      throw new CourseNotFoundException(id);
+    }
     return course;
   }
 
@@ -33,7 +36,7 @@ export class CoursesService {
 
   remove(id: number): void {
     const index = this.courses.findIndex((c) => c.id === id);
-    if (index === -1) throw new NotFoundException(`Curso ${id} não encontrado`);
+    if (index === -1) throw new CourseNotFoundException(id);
     this.courses.splice(index, 1);
   }
 }
