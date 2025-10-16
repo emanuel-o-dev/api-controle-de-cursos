@@ -7,9 +7,17 @@ import { CoursesModule } from './courses/courses.module';
 import { UsersModule } from './users/users.module';
 import { AuthMiddleware } from './middlewares/auth/auth.middleware';
 import { ErrorsModule } from './errors/errors.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
-  imports: [SharedModule, CoreModule, CoursesModule, UsersModule, ErrorsModule],
+  imports: [
+    SharedModule,
+    CoreModule,
+    CoursesModule,
+    UsersModule,
+    ErrorsModule,
+    PrismaModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
@@ -20,5 +28,3 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes('/users'); // Aplica o middleware AuthMiddleware para todas as rotas que começam com /users
   }
 }
-// O que é um módulo?
-// Um módulo é uma classe anotada com o decorator @Module, que organiza o código em unidades coesas, agrupando controladores, provedores e outros módulos relacionados.
