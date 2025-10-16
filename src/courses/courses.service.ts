@@ -1,42 +1,49 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { Course } from './entities/course.entity';
-import { coursesSeed } from './courses.seed';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CourseNotFoundException } from '../filters/course-not-found.exception';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class CoursesService {
-  private courses: Course[] = coursesSeed;
+  constructor(private prisma: PrismaService) {}
 
-  private idCounter = this.courses.length + 1;
-
-  create(course: CreateCourseDto): Course {
-    const newCourse = { id: this.idCounter++, ...course };
-    this.courses.push(newCourse);
-    return newCourse;
+  async create(data: CreateCourseDto) {
+    return await this.prisma.course.create({ data });
   }
 
-  findAll(): Course[] {
-    return this.courses;
+  async findAll(): Promise<Course[]> {
+    return await this.prisma.course.findMany();
   }
 
-  findOne(id: number): Course {
-    const course = this.courses.find((c) => c.id === id);
+  async findOne(id: number): Promise<Course> {
+    const course = await this.prisma.course.findUnique({ where: { id } });
     if (!course) {
       throw new CourseNotFoundException(id);
     }
     return course;
   }
 
-  update(id: number, updateData: Partial<Course>): Course {
-    const course = this.findOne(id);
-    Object.assign(course, updateData);
-    return course;
+  async update(id: number, updateData: Partial<Course>): Promise<Course> {
+    const course = await this.prisma.course.findUnique({ where: { id } });
+    if (!course) {
+      throw new CourseNotFoundException(id);
+    }
+    return this.prisma.course.update({
+      where: { id },
+      data: updateData,
+    });
   }
 
-  remove(id: number): void {
-    const index = this.courses.findIndex((c) => c.id === id);
-    if (index === -1) throw new CourseNotFoundException(id);
-    this.courses.splice(index, 1);
+  async remove(id: number): Promise<void> {
+    const course = await this.prisma.course.findUnique({ where: { id } });
+    if (!course) {
+      throw new CourseNotFoundException(id);
+    }
+    await this.prisma.course.delete({ where: { id } });
   }
 }
