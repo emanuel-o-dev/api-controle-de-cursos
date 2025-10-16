@@ -1,18 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CourseNotFoundException } from '../filters/course-not-found.exception';
 import { PrismaService } from '../prisma/prisma.service';
+import { CourseCodeInUseException } from '../filters/course-code-in-use.exception';
 
 @Injectable()
 export class CoursesService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateCourseDto) {
+    const course = await this.prisma.course.findUnique({
+      where: { code: data.code },
+    });
+    if (course) {
+      throw new CourseCodeInUseException(data.code);
+    }
     return await this.prisma.course.create({ data });
   }
 
