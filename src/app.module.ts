@@ -8,6 +8,8 @@ import { UsersModule } from './users/users.module';
 import { AuthMiddleware } from './middlewares/auth/auth.middleware';
 import { ErrorsModule } from './errors/errors.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
@@ -17,14 +19,15 @@ import { PrismaModule } from './prisma/prisma.module';
     UsersModule,
     ErrorsModule,
     PrismaModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UsersService],
 })
 // O que faz esse módulo?
 // Este módulo é o módulo raiz da aplicação, onde todos os outros módulos são importados e configurados.
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('/users'); // Aplica o middleware AuthMiddleware para todas as rotas que começam com /users
+    //consumer.apply(AuthMiddleware).forRoutes('/users/*'); // Aplica o middleware AuthMiddleware para todas as rotas que começam com /users
   }
 }
