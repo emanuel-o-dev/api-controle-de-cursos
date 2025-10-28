@@ -8,43 +8,80 @@ import {
   Param,
   ParseIntPipe,
   UseInterceptors,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { LoggingInterceptor } from '../interceptors/logging/logging.interceptor';
 import { CustomException } from '../filters/custom-exception.exception';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Role } from '@prisma/client';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UpdateCourseDto } from './dto/update-course.dto';
 
 @Controller('courses')
 @UseInterceptors(LoggingInterceptor)
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
+  // Criar curso — apenas ADMIN e INSTRUCTOR
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Post()
-  create(@Body() createCourseDto: CreateCourseDto) {
+  async create(@Body() createCourseDto: CreateCourseDto, @Request() req) {
     if (!createCourseDto.code || !createCourseDto.description) {
       throw new CustomException();
     }
-    return this.coursesService.create(createCourseDto);
+    return await this.coursesService.create(createCourseDto, req.user.id);
   }
 
+  // Listar todos os cursos (com alunos inscritos)
   @Get()
   findAll() {
     return this.coursesService.findAll();
   }
 
+  // Obter curso específico (com inscrições)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.coursesService.findOne(id);
   }
 
+  // Atualizar curso
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Put(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: Partial<Course>) {
-    return this.coursesService.update(id, body);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCourseDto: UpdateCourseDto,
+  ) {
+    return await this.coursesService.update(id, updateCourseDto);
   }
 
+  // Excluir curso
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.coursesService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.coursesService.remove(id);
+  }
+
+  //  Inscrever aluno em um curso (pode ser o próprio aluno autenticado)
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/enroll')
+  async enroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
+    const studentId = req.user.id; // obtém o id do aluno logado pelo token JWT
+    return await this.coursesService.enrollStudent(courseId, studentId);
+  }
+
+  //  Cancelar inscrição (aluno autenticado ou admin)
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id/unenroll')
+  async unenroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
+    const studentId = req.user.id;
+    return await this.coursesService.unenrollStudent(courseId, studentId);
   }
 }
