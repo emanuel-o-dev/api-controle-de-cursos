@@ -4,25 +4,44 @@ import {
   Controller,
   Get,
   Param,
-  HttpException,
+  ParseIntPipe,
+  Body,
+  Post,
+  Delete,
+  Put,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from 'src/filters/http-exception/http-exception.filter';
 import { ResponseInterceptor } from 'src/interceptors/response/response.interceptor';
+import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('users')
 @UseFilters(HttpExceptionFilter)
 @UseInterceptors(ResponseInterceptor)
 export class UsersController {
+  constructor(private readonly userService: UsersService) {}
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    if (id !== '1') {
-      throw new HttpException('Usuário não encontrado', 404);
-    }
-    return { id, name: 'John Doe' };
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findOneById(id);
   }
 
   @Get()
   findAll() {
-    return [{ id: 1, name: 'John Doe' }];
+    return this.userService.findAll();
+  }
+
+  @Put(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.remove(id);
   }
 }
