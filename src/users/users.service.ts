@@ -7,11 +7,17 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      include: { Enrollment: true },
+      omit: { password: true },
+    });
   }
 
   async findOneByEmail(email: string) {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      omit: { password: true },
+    });
     if (!user) {
       throw new NotFoundException(email);
     }
@@ -19,7 +25,10 @@ export class UsersService {
   }
 
   async findOneById(id: number) {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      omit: { password: true },
+    });
     if (!user) {
       throw new NotFoundException(id);
     }
@@ -30,9 +39,10 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: updateData,
+      omit: { password: true },
     });
   }
   async remove(id: number) {
-    await this.prisma.user.delete({ where: { id } });
+    await this.prisma.user.delete({ where: { id }, omit: { password: true } });
   }
 }

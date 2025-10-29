@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CourseNotFoundException } from '../filters/course-not-found.exception';
 import { CourseCodeInUseException } from '../filters/course-code-in-use.exception';
-import { Course } from './entities/course.entity';
 
 @Injectable()
 export class CoursesService {
@@ -28,7 +27,7 @@ export class CoursesService {
   }
 
   // Buscar todos os cursos (com criador e alunos inscritos)
-  async findAll(): Promise<Course[]> {
+  async findAll(): Promise<any[]> {
     return await this.prisma.course.findMany({
       include: {
         createdBy: true,
@@ -42,7 +41,7 @@ export class CoursesService {
   }
 
   // Buscar curso específico
-  async findOne(id: number): Promise<Course> {
+  async findOne(id: number): Promise<any> {
     const course = await this.prisma.course.findUnique({
       where: { id },
       include: {
@@ -63,7 +62,7 @@ export class CoursesService {
   }
 
   // Atualizar curso
-  async update(id: number, updateData: Partial<Course>): Promise<Course> {
+  async update(id: number, updateData: Partial<any>): Promise<any> {
     const course = await this.prisma.course.findUnique({ where: { id } });
     if (!course) {
       throw new CourseNotFoundException(id);

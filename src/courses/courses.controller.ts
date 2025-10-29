@@ -12,7 +12,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
-import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { LoggingInterceptor } from '../interceptors/logging/logging.interceptor';
 import { CustomException } from '../filters/custom-exception.exception';
