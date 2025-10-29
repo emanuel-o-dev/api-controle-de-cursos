@@ -9,11 +9,17 @@ datasource db {
 
 model User {
   id        Int      @id @default(autoincrement())
-  password  String
   name      String
   email     String   @unique
+  password  String
   age       Int?
+  role      Role     @default(USER)
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
+
+  // Relação com os cursos que ele criou
+  courses    Course[]
+  Enrollment Enrollment[]
 }
 
 model Course {
@@ -27,6 +33,20 @@ model Course {
   prerequisites String[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  // Relação com o usuário criador
+  createdById Int
+  createdBy   User         @relation(fields: [createdById], references: [id])
+  Enrollment  Enrollment[]
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  courseId  Int
+  createdAt DateTime @default(now())
 }
 
 enum CourseLevel {
@@ -39,4 +59,10 @@ enum CourseType {
   Presencial
   EAD
   Híbrido
+}
+
+enum Role {
+  ADMIN
+  INSTRUCTOR
+  USER
 }

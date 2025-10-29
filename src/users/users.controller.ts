@@ -9,12 +9,17 @@ import {
   Post,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from 'src/filters/http-exception/http-exception.filter';
 import { ResponseInterceptor } from 'src/interceptors/response/response.interceptor';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from '@prisma/client';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 @UseFilters(HttpExceptionFilter)
@@ -27,11 +32,15 @@ export class UsersController {
     return this.userService.findOneById(id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR, Role.USER)
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
@@ -40,6 +49,8 @@ export class UsersController {
     return this.userService.update(id, updateUserDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR, Role.USER)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);

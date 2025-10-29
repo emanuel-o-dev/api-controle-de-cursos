@@ -7,6 +7,7 @@ import {
   IsArray,
   IsOptional,
   IsIn,
+  IsInt,
 } from 'class-validator';
 
 export class CreateCourseDto {
@@ -18,7 +19,7 @@ export class CreateCourseDto {
   @IsNotEmpty({ message: 'Nome não pode ser vazio' })
   name: string;
 
-  @IsString()
+  @IsString({ message: 'Descrição deve ser uma string' })
   @IsOptional()
   description?: string;
 
@@ -36,7 +37,11 @@ export class CreateCourseDto {
   })
   type: 'Presencial' | 'EAD' | 'Híbrido';
 
-  @IsArray()
+  @IsArray({ message: 'Prerequisites deve ser um array' })
   @IsOptional()
   prerequisites?: string[];
+
+  @IsInt({ message: 'createdBy deve ser um número inteiro' })
+  @IsOptional()
+  createdBy?: number;
 }
