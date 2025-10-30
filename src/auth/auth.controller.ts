@@ -11,7 +11,10 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { LoginDto } from './dto/login.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -29,13 +32,11 @@ export class AuthController {
   }
 
   @Post('login')
-  @HttpCode(HttpStatus.OK) // define o status 200 OK explicitamente
-  async login(
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
-    const jwt = await this.authService.login(email, password);
-    return jwt; // retornará { access_token: '...' }
+  @ApiBody({ type: LoginDto })
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() loginDto: LoginDto) {
+    const jwt = await this.authService.login(loginDto.email, loginDto.password);
+    return jwt;
   }
 
   @UseGuards(JwtAuthGuard)
