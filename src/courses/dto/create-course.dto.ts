@@ -20,8 +20,7 @@ export class CreateCourseDto {
   name: string;
 
   @IsString({ message: 'Descrição deve ser uma string' })
-  @IsOptional()
-  description?: string;
+  description: string;
 
   @IsNumber({}, { message: 'hoursTotal deve ser um número' })
   hoursTotal: number;

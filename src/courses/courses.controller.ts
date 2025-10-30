@@ -26,7 +26,6 @@ import { UpdateCourseDto } from './dto/update-course.dto';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
-  // Criar curso — apenas ADMIN e INSTRUCTOR
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Post()
@@ -37,19 +36,16 @@ export class CoursesController {
     return await this.coursesService.create(createCourseDto, req.user.id);
   }
 
-  // Listar todos os cursos (com alunos inscritos)
   @Get()
   findAll() {
     return this.coursesService.findAll();
   }
 
-  // Obter curso específico (com inscrições)
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.coursesService.findOne(id);
   }
 
-  // Atualizar curso
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Put(':id')
@@ -60,7 +56,6 @@ export class CoursesController {
     return await this.coursesService.update(id, updateCourseDto);
   }
 
-  // Excluir curso
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @Delete(':id')
@@ -68,7 +63,6 @@ export class CoursesController {
     return await this.coursesService.remove(id);
   }
 
-  //  Inscrever aluno em um curso (pode ser o próprio aluno autenticado)
   @UseGuards(JwtAuthGuard)
   @Post(':id/enroll')
   async enroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
@@ -76,7 +70,6 @@ export class CoursesController {
     return await this.coursesService.enrollStudent(courseId, studentId);
   }
 
-  //  Cancelar inscrição (aluno autenticado ou admin)
   @UseGuards(JwtAuthGuard)
   @Delete(':id/unenroll')
   async unenroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
