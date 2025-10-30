@@ -20,7 +20,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  @HttpCode(HttpStatus.CREATED) // define o status 201 Created explicitamente
+  @HttpCode(HttpStatus.CREATED)
   async register(@Body() dto: CreateUserDto) {
     const newUser = await this.authService.register(
       dto.email,
@@ -34,8 +34,11 @@ export class AuthController {
   @Post('login')
   @ApiBody({ type: LoginDto })
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto) {
-    const jwt = await this.authService.login(loginDto.email, loginDto.password);
+  async login(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ) {
+    const jwt = await this.authService.login(email, password);
     return jwt;
   }
 
