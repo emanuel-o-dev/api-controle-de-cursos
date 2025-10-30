@@ -42,15 +42,7 @@ export class CoursesService {
           },
         },
         Enrollment: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
+          select: { userId: true },
         },
       },
     });
@@ -65,17 +57,6 @@ export class CoursesService {
           select: {
             name: true,
             email: true,
-          },
-        },
-        Enrollment: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
           },
         },
       },
