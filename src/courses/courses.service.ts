@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CourseNotFoundException } from '../filters/course-not-found.exception';
 import { CourseCodeInUseException } from '../filters/course-code-in-use.exception';
+import { Course } from '@prisma/client';
 
 @Injectable()
 export class CoursesService {
@@ -27,7 +28,7 @@ export class CoursesService {
   }
 
   // Buscar todos os cursos (com criador e alunos inscritos)
-  async findAll(): Promise<any[]> {
+  async findAll(): Promise<Course[]> {
     return await this.prisma.course.findMany({
       include: {
         createdBy: true,
@@ -35,13 +36,15 @@ export class CoursesService {
           include: {
             user: true,
           },
+          orderBy: { user: { name: 'asc' } },
+          select: { user: { omit: { password: true } } },
         },
       },
     });
   }
 
   // Buscar curso específico
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<Course> {
     const course = await this.prisma.course.findUnique({
       where: { id },
       include: {
@@ -62,7 +65,7 @@ export class CoursesService {
   }
 
   // Atualizar curso
-  async update(id: number, updateData: Partial<any>): Promise<any> {
+  async update(id: number, updateData: Partial<Course>): Promise<Course> {
     const course = await this.prisma.course.findUnique({ where: { id } });
     if (!course) {
       throw new CourseNotFoundException(id);
@@ -76,13 +79,13 @@ export class CoursesService {
   }
 
   // Remover curso
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<Course> {
     const course = await this.prisma.course.findUnique({ where: { id } });
     if (!course) {
       throw new CourseNotFoundException(id);
     }
 
-    await this.prisma.course.delete({ where: { id } });
+    return this.prisma.course.delete({ where: { id } });
   }
 
   // Inscrever usuário em curso
