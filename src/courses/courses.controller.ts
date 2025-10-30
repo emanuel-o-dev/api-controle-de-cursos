@@ -36,20 +36,6 @@ import { Roles } from '../auth/decorators/roles.decorator';
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
-  @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.INSTRUCTOR)
-  @ApiOperation({ summary: 'Cria um novo curso' })
-  @ApiResponse({ status: 201, description: 'Curso criado com sucesso.' })
-  @ApiResponse({ status: 400, description: 'Campos obrigatórios ausentes.' })
-  @ApiBody({ type: CreateCourseDto })
-  async create(@Body() createCourseDto: CreateCourseDto, @Request() req) {
-    if (!createCourseDto.code || !createCourseDto.description) {
-      throw new CustomException('Campos obrigatórios ausentes.');
-    }
-    return await this.coursesService.create(createCourseDto, req.user.userId);
-  }
-
   @Get()
   @ApiOperation({ summary: 'Lista todos os cursos' })
   @ApiResponse({ status: 200, description: 'Lista retornada com sucesso.' })
@@ -66,6 +52,21 @@ export class CoursesController {
     return this.coursesService.findOne(id);
   }
 
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR)
+  @ApiOperation({ summary: 'Cria um novo curso' })
+  @ApiResponse({ status: 201, description: 'Curso criado com sucesso.' })
+  @ApiResponse({ status: 400, description: 'Campos obrigatórios ausentes.' })
+  @ApiBody({ type: CreateCourseDto })
+  @ApiBearerAuth()
+  async create(@Body() createCourseDto: CreateCourseDto, @Request() req) {
+    if (!createCourseDto.code || !createCourseDto.description) {
+      throw new CustomException('Campos obrigatórios ausentes.');
+    }
+    return await this.coursesService.create(createCourseDto, req.user.userId);
+  }
+
   @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR)
@@ -74,6 +75,7 @@ export class CoursesController {
   @ApiBody({ type: UpdateCourseDto })
   @ApiResponse({ status: 200, description: 'Curso atualizado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
+  @ApiBearerAuth()
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCourseDto: UpdateCourseDto,
@@ -87,6 +89,7 @@ export class CoursesController {
   @ApiOperation({ summary: 'Remove um curso' })
   @ApiParam({ name: 'id', description: 'ID do curso', type: Number })
   @ApiResponse({ status: 200, description: 'Curso removido com sucesso.' })
+  @ApiBearerAuth()
   async remove(@Param('id', ParseIntPipe) id: number) {
     return await this.coursesService.remove(id);
   }
@@ -96,6 +99,7 @@ export class CoursesController {
   @Roles(Role.USER, Role.INSTRUCTOR, Role.ADMIN)
   @ApiOperation({ summary: 'Matricula o usuário autenticado em um curso' })
   @ApiParam({ name: 'id', description: 'ID do curso', type: Number })
+  @ApiBearerAuth()
   @ApiResponse({ status: 201, description: 'Usuário matriculado com sucesso.' })
   async enroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
     const studentId = req.user.userId;
@@ -108,6 +112,7 @@ export class CoursesController {
   @ApiOperation({ summary: 'Remove a matrícula do usuário autenticado' })
   @ApiParam({ name: 'id', description: 'ID do curso', type: Number })
   @ApiResponse({ status: 200, description: 'Matrícula removida com sucesso.' })
+  @ApiBearerAuth()
   async unenroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
     const studentId = req.user.userId;
     return await this.coursesService.unenrollStudent(courseId, studentId);

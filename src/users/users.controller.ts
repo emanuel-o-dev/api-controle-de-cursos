@@ -35,15 +35,18 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.INSTRUCTOR, Role.USER)
+  @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Buscar usuário por ID' })
   @ApiResponse({ status: 200, description: 'Usuário encontrado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
-  @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.userService.findOneById(id);
   }
 
-  @ApiBearerAuth()
+  @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR)
   @ApiOperation({ summary: 'Listar todos os usuários' })
@@ -51,12 +54,12 @@ export class UsersController {
     status: 200,
     description: 'Lista de usuários retornada com sucesso.',
   })
-  @Get()
+  @ApiBearerAuth()
   findAll() {
     return this.userService.findAll();
   }
 
-  @ApiBearerAuth()
+  @Put(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR, Role.USER)
   @ApiOperation({ summary: 'Atualizar dados de um usuário' })
@@ -65,7 +68,7 @@ export class UsersController {
     status: 403,
     description: 'Usuário não autorizado para atualizar este perfil.',
   })
-  @Put(':id')
+  @ApiBearerAuth()
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateUserDto,
@@ -77,13 +80,13 @@ export class UsersController {
     return this.userService.update(id, dto);
   }
 
-  @ApiBearerAuth()
+  @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.INSTRUCTOR, Role.USER)
   @ApiOperation({ summary: 'Remover usuário por ID' })
   @ApiResponse({ status: 200, description: 'Usuário removido com sucesso.' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
-  @Delete(':id')
+  @ApiBearerAuth()
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);
   }

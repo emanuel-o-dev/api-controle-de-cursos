@@ -11,7 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
@@ -41,6 +41,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('perfil')
+  @ApiBearerAuth()
   async getPerfil(@Req() request) {
     const usuarioLogado = request.user;
     return {
