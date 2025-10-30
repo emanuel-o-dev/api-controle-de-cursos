@@ -10,6 +10,8 @@ import {
   Delete,
   Put,
   UseGuards,
+  ForbiddenException,
+  Request,
 } from '@nestjs/common';
 import { HttpExceptionFilter } from 'src/filters/http-exception/http-exception.filter';
 import { ResponseInterceptor } from 'src/interceptors/response/response.interceptor';
@@ -44,9 +46,13 @@ export class UsersController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() dto: UpdateUserDto,
+    @Request() req,
   ) {
-    return this.userService.update(id, updateUserDto);
+    if (req.user.role === Role.USER && req.user.id !== id) {
+      throw new ForbiddenException('Usuário não pode alterar outro perfil');
+    }
+    return this.userService.update(id, dto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

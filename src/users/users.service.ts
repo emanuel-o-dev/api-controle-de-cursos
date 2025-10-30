@@ -18,9 +18,8 @@ export class UsersService {
       where: { email },
       omit: { password: true },
     });
-    if (!user) {
-      throw new NotFoundException(email);
-    }
+    if (!user)
+      throw new NotFoundException(`Usuário com e-mail ${email} não encontrado`);
     return user;
   }
 
@@ -29,9 +28,8 @@ export class UsersService {
       where: { id },
       omit: { password: true },
     });
-    if (!user) {
-      throw new NotFoundException(id);
-    }
+    if (!user)
+      throw new NotFoundException(`Usuário com ID ${id} não encontrado`);
     return user;
   }
 
