@@ -31,9 +31,9 @@ export class CoursesController {
   @Post()
   async create(@Body() createCourseDto: CreateCourseDto, @Request() req) {
     if (!createCourseDto.code || !createCourseDto.description) {
-      throw new CustomException();
+      throw new CustomException('Campos obrigatórios ausentes.');
     }
-    return await this.coursesService.create(createCourseDto, req.user.id);
+    return await this.coursesService.create(createCourseDto, req.user.userId);
   }
 
   @Get()
@@ -64,16 +64,18 @@ export class CoursesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.USER, Role.INSTRUCTOR, Role.ADMIN)
   @Post(':id/enroll')
   async enroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
-    const studentId = req.user.id; // obtém o id do aluno logado pelo token JWT
+    const studentId = req.user.userId; // obtém o id do aluno logado pelo token JWT
     return await this.coursesService.enrollStudent(courseId, studentId);
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles(Role.USER, Role.INSTRUCTOR, Role.ADMIN)
   @Delete(':id/unenroll')
   async unenroll(@Param('id', ParseIntPipe) courseId: number, @Request() req) {
-    const studentId = req.user.id;
+    const studentId = req.user.userId;
     return await this.coursesService.unenrollStudent(courseId, studentId);
   }
 }
