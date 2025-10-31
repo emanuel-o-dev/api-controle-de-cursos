@@ -25,6 +25,6 @@ export class ErrorsController {
 
   @Get('/custom-error')
   throwCustomError() {
-    throw new CustomException();
+    throw new CustomException('Este é um erro personalizado.');
   }
 }

@@ -1,0 +1,706 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/courses": {
+      "get": {
+        "operationId": "CoursesController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista retornada com sucesso."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Lista todos os cursos",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "post": {
+        "operationId": "CoursesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Curso criado com sucesso."
+          },
+          "400": {
+            "description": "Campos obrigatórios ausentes."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Cria um novo curso",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/courses/{id}": {
+      "get": {
+        "operationId": "CoursesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do curso",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Curso encontrado."
+          },
+          "404": {
+            "description": "Curso não encontrado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Busca um curso pelo ID",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "put": {
+        "operationId": "CoursesController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do curso",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Curso atualizado com sucesso."
+          },
+          "404": {
+            "description": "Curso não encontrado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualiza um curso existente",
+        "tags": [
+          "Courses"
+        ]
+      },
+      "delete": {
+        "operationId": "CoursesController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do curso",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Curso removido com sucesso."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove um curso",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/courses/{id}/enroll": {
+      "post": {
+        "operationId": "CoursesController_enroll",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do curso",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuário matriculado com sucesso."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Matricula o usuário autenticado em um curso",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/courses/{id}/unenroll": {
+      "delete": {
+        "operationId": "CoursesController_unenroll",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do curso",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matrícula removida com sucesso."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remove a matrícula do usuário autenticado",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário encontrado com sucesso."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Buscar usuário por ID",
+        "tags": [
+          "Users"
+        ]
+      },
+      "put": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso."
+          },
+          "403": {
+            "description": "Usuário não autorizado para atualizar este perfil."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualizar dados de um usuário",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário removido com sucesso."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remover usuário por ID",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de usuários retornada com sucesso."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar todos os usuários",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/errors/{id}": {
+      "get": {
+        "operationId": "ErrorsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Errors"
+        ]
+      }
+    },
+    "/errors/http-exception-simple": {
+      "get": {
+        "operationId": "ErrorsController_throwHttpExceptionSimple",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Errors"
+        ]
+      }
+    },
+    "/errors/custom-error": {
+      "get": {
+        "operationId": "ErrorsController_throwCustomError",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Errors"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "usuario@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "SenhaSegura123"
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              },
+              "examples": {
+                "valido_1": {
+                  "summary": "Login válido (1)",
+                  "value": {
+                    "email": "usuario@example.com",
+                    "password": "SenhaSegura123"
+                  }
+                },
+                "valido_2": {
+                  "summary": "Login válido (2)",
+                  "value": {
+                    "email": "usuario@example.com",
+                    "password": "SenhaSegura123"
+                  }
+                },
+                "valido_3": {
+                  "summary": "Login válido Admin",
+                  "value": {
+                    "email": "testeStudio@example.com",
+                    "password": "123456"
+                  }
+                },
+                "invalido_email_invalido": {
+                  "summary": "Email em formato inválido",
+                  "value": {
+                    "email": "usuario",
+                    "password": "minhasenha"
+                  },
+                  "description": "❌ Falha: email não é um endereço válido."
+                },
+                "invalido_senha_curta": {
+                  "summary": "Senha com menos de 8 caracteres",
+                  "value": {
+                    "email": "teste@example.com",
+                    "password": "123"
+                  },
+                  "description": "❌ Falha: password tem menos de 8 caracteres."
+                },
+                "invalido_email_vazio": {
+                  "summary": "Email vazio",
+                  "value": {
+                    "email": "",
+                    "password": "abcdefgh"
+                  },
+                  "description": "❌ Falha: email vazio não é válido."
+                },
+                "invalido_senha_vazia": {
+                  "summary": "Senha vazia",
+                  "value": {
+                    "email": "user@site.com",
+                    "password": ""
+                  },
+                  "description": "❌ Falha: password vazio não atende ao MinLength(8)."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/auth/perfil": {
+      "get": {
+        "operationId": "AuthController_getPerfil",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/admin": {
+      "get": {
+        "operationId": "AdminController_getAdminData",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Acesso concedido ao admin."
+          },
+          "401": {
+            "description": "Acesso negado."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Admin"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "API com Swagger",
+    "description": "Documentação automática da API com Swagger",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateCourseDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "CURSO1",
+            "description": "Código único do curso (não pode ser repetido)"
+          },
+          "name": {
+            "type": "string",
+            "example": "Introdução à Programação",
+            "description": "Nome completo do curso"
+          },
+          "description": {
+            "type": "string",
+            "example": "Curso introdutório sobre fundamentos de programação.",
+            "description": "Breve descrição do curso"
+          },
+          "hoursTotal": {
+            "type": "number",
+            "example": 40,
+            "description": "Carga horária total em horas"
+          },
+          "level": {
+            "type": "string",
+            "example": "Básico",
+            "enum": [
+              "Básico",
+              "Intermediário",
+              "Avançado"
+            ],
+            "description": "Nível de dificuldade do curso"
+          },
+          "type": {
+            "type": "string",
+            "example": "Presencial",
+            "enum": [
+              "Presencial",
+              "EAD",
+              "Híbrido"
+            ],
+            "description": "Tipo de oferta do curso (modalidade)"
+          },
+          "prerequisites": {
+            "example": [
+              "Lógica de Programação",
+              "Matemática Básica"
+            ],
+            "description": "Pré-requisitos para cursar (opcional)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdBy": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do usuário criador do curso (setado automaticamente no backend)"
+          }
+        },
+        "required": [
+          "code",
+          "name",
+          "description",
+          "hoursTotal",
+          "level",
+          "type"
+        ]
+      },
+      "UpdateCourseDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "usuario@example.com",
+            "description": "Endereço de e-mail único do usuário"
+          },
+          "name": {
+            "type": "string",
+            "example": "João Silva",
+            "description": "Nome completo do usuário"
+          },
+          "password": {
+            "type": "string",
+            "example": "SenhaSegura123",
+            "description": "Senha do usuário"
+          },
+          "age": {
+            "type": "number",
+            "example": 25,
+            "description": "Idade do usuário (opcional)"
+          }
+        },
+        "required": [
+          "email",
+          "name",
+          "password"
+        ]
+      }
+    }
+  }
+}

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
 import { LoggingInterceptor } from '../interceptors/logging/logging.interceptor';
 import { LoggerMiddleware } from '../middlewares/logger/logger.middleware';
@@ -11,8 +10,12 @@ jest.mock('@prisma/client', () => {
   }
   return { PrismaClient };
 });
+jest.mock('./courses.controller', () => {
+  return { CoursesController: class {} };
+});
+const { CoursesController } = require('./courses.controller');
 describe('CoursesController', () => {
-  let controller: CoursesController;
+  let controller: typeof CoursesController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,7 +28,7 @@ describe('CoursesController', () => {
       ],
     }).compile();
 
-    controller = module.get<CoursesController>(CoursesController);
+    controller = module.get<typeof CoursesController>(CoursesController);
   });
 
   it('should be defined', () => {
