@@ -29,7 +29,5 @@ import { AdminModule } from './admin/admin.module';
 // O que faz esse módulo?
 // Este módulo é o módulo raiz da aplicação, onde todos os outros módulos são importados e configurados.
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    //consumer.apply(AuthMiddleware).forRoutes('/users/*'); // Aplica o middleware AuthMiddleware para todas as rotas que começam com /users
-  }
+  configure(consumer: MiddlewareConsumer) {}
 }

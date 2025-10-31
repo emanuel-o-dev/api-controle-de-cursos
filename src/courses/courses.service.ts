@@ -4,6 +4,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { CourseNotFoundException } from '../filters/course-not-found.exception';
 import { CourseCodeInUseException } from '../filters/course-code-in-use.exception';
 import { Course } from '@prisma/client';
+import { CustomException } from '../filters/custom-exception.exception';
 
 @Injectable()
 export class CoursesService {
@@ -18,26 +19,30 @@ export class CoursesService {
       throw new CourseCodeInUseException(data.code);
     }
 
-    return await this.prisma.course.create({
-      data: {
-        ...data,
-        createdBy: { connect: { id: createdById } },
-      },
-      include: { createdBy: true },
-    });
+    try {
+      return await this.prisma.course.create({
+        data: {
+          ...data,
+          createdBy: { connect: { id: createdById } },
+        },
+      });
+    } catch (error) {
+      throw new CustomException(error.message);
+    }
   }
 
   // Buscar todos os cursos (com criador e alunos inscritos)
   async findAll(): Promise<Course[]> {
     return await this.prisma.course.findMany({
       include: {
-        createdBy: true,
-        Enrollment: {
-          include: {
-            user: true,
+        createdBy: {
+          select: {
+            name: true,
+            email: true,
           },
-          orderBy: { user: { name: 'asc' } },
-          select: { user: { omit: { password: true } } },
+        },
+        Enrollment: {
+          select: { userId: true },
         },
       },
     });
@@ -48,10 +53,10 @@ export class CoursesService {
     const course = await this.prisma.course.findUnique({
       where: { id },
       include: {
-        createdBy: true,
-        Enrollment: {
-          include: {
-            user: true,
+        createdBy: {
+          select: {
+            name: true,
+            email: true,
           },
         },
       },
@@ -74,7 +79,6 @@ export class CoursesService {
     return await this.prisma.course.update({
       where: { id },
       data: updateData,
-      include: { createdBy: true },
     });
   }
 
@@ -99,7 +103,7 @@ export class CoursesService {
     const existing = await this.prisma.enrollment.findFirst({
       where: { userId, courseId },
     });
-    if (existing) return existing;
+    if (existing) throw new CustomException('Aluno já inscrito neste curso.');
 
     return await this.prisma.enrollment.create({
       data: {
@@ -107,16 +111,21 @@ export class CoursesService {
         courseId,
       },
       include: {
-        user: true,
-        course: true,
+        course: { select: { id: true, code: true, description: true } },
+        user: { select: { id: true, name: true, email: true } },
       },
     });
   }
 
   // Cancelar inscrição de aluno
   async unenrollStudent(courseId: number, userId: number) {
-    return await this.prisma.enrollment.deleteMany({
-      where: { userId, courseId },
-    });
+    try {
+      await this.prisma.enrollment.deleteMany({
+        where: { userId, courseId },
+      });
+      return { message: 'Inscrição cancelada com sucesso.' };
+    } catch (error) {
+      throw new CustomException('Erro ao cancelar inscrição: ' + error.message);
+    }
   }
 }
