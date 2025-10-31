@@ -33,7 +33,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   // Gera o arquivo swagger.json
-  //writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+  writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   await app.listen(process.env.PORT ?? 3000);
 }
