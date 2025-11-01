@@ -34,21 +34,34 @@ async function bootstrap() {
 
   // Gera o arquivo swagger.json
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
-  
-   app.enableCors({
-    origin: 'https://skillshare-manager-r6mnzkjim-emanuels-projects-473dcea2.vercel.app',
+
+  const vercelPattern = /^https:\/\/skillshare-manager-*\.vercel\.app$/;
+
+  app.enableCors({
+    origin: vercelPattern,
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
-    credentials: true, // só se você realmente usar cookies/credentials
-    // optionsSuccessStatus: 204 // opcional — status para respostas OPTIONS
-   });
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+    ],
+    credentials: true, // só habilite se for realmente necessário (cookies/credenciais)
+  });
   app.enableCors({
     origin: 'https://skillshare-manager.vercel.app',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+    ],
     credentials: true, // só se você realmente usar cookies/credentials
     // optionsSuccessStatus: 204 // opcional — status para respostas OPTIONS
-   });
+  });
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
