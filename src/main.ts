@@ -35,12 +35,12 @@ async function bootstrap() {
   // Gera o arquivo swagger.json
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
- const vercelRegex = /^https:\/\/skillshare-manager-[a-z0-9]+-[a-z0-9]+\.vercel\.app$/;
-
+  const vercelRegex = /^https:\/\/skillshare-manager-[a-z0-9-]+\.vercel\.app$/;
+  
   app.enableCors({
     origin: (origin, callback) => {
       if (
-        !origin || // permite testes locais (ex: Postman)
+        !origin ||
         origin.startsWith('http://localhost') ||
         vercelRegex.test(origin)
       ) {
@@ -60,7 +60,7 @@ async function bootstrap() {
     ],
     credentials: true,
   });
-  
+
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
