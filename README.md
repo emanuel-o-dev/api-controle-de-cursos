@@ -10,7 +10,7 @@ Esta API foi desenvolvida como parte do curso de Tecnologia em Sistemas para Int
 
 ## Link para a API em Produção
 
-[Acessar API em Produção](https://exemplo-de-api.com)
+[Acessar API em Produção](https://clear-maryellen-test-em-b45da8d2.koyeb.app/courses)
 
 ---
 
