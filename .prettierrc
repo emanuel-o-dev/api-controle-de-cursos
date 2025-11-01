@@ -1,7 +1,6 @@
 
-{ "singleQuote": true, "trailingComma": "all", "endOfLine": "auto" }
-
-{  "singleQuote": true,
+{ 
+  "singleQuote": true,
   "trailingComma": "all",
   "endOfLine": "crlf"
 }

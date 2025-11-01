@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
@@ -34,6 +33,14 @@ async function bootstrap() {
 
   // Gera o arquivo swagger.json
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
+
+  app.enableCors({
+    origin: [
+      'https://skillshare-manager-qdw50xnfq-emanuels-projects-473dcea2.vercel.app',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }
