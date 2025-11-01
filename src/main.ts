@@ -35,17 +35,29 @@ async function bootstrap() {
   // Gera o arquivo swagger.json
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
-  const vercelRegex = /^https:\/\/skillshare-manager-[a-z0-9]+\.vercel\.app$/;
+ const vercelRegex = /^https:\/\/skillshare-manager-[a-z0-9]+-[a-z0-9]+\.vercel\.app$/;
 
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || vercelRegex.test(origin)) {
+      if (
+        !origin || // permite testes locais (ex: Postman)
+        origin.startsWith('http://localhost') ||
+        vercelRegex.test(origin)
+      ) {
         callback(null, true);
       } else {
+        console.warn('🚫 CORS bloqueado para origem:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'Origin',
+      'X-Requested-With',
+    ],
     credentials: true,
   });
   
