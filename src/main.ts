@@ -49,19 +49,6 @@ async function bootstrap() {
     credentials: true,
   });
   
-  app.enableCors({
-    origin: 'https://skillshare-manager.vercel.app',
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Accept',
-      'Origin',
-      'X-Requested-With',
-    ],
-    credentials: true, // só se você realmente usar cookies/credentials
-    // optionsSuccessStatus: 204 // opcional — status para respostas OPTIONS
-  });
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
