@@ -41,9 +41,6 @@ export class CoursesService {
             email: true,
           },
         },
-        Enrollment: {
-          select: { userId: true },
-        },
       },
     });
   }
