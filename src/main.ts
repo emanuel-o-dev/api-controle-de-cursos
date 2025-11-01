@@ -16,7 +16,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.use(new LoggerMiddleware().use);
+  const loggerMiddleware = new LoggerMiddleware();
+  app.use(loggerMiddleware.use.bind(loggerMiddleware));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
 
@@ -35,9 +36,7 @@ async function bootstrap() {
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   app.enableCors({
-    origin: [
-      'https://skillshare-manager-qdw50xnfq-emanuels-projects-473dcea2.vercel.app',
-    ],
+    origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
   });
