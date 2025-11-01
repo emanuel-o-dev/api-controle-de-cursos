@@ -35,20 +35,20 @@ async function bootstrap() {
   // Gera o arquivo swagger.json
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
-  const vercelPattern = /^https:\/\/skillshare-manager-*\.vercel\.app$/;
+  const vercelRegex = /^https:\/\/skillshare-manager-[a-z0-9]+\.vercel\.app$/;
 
   app.enableCors({
-    origin: vercelPattern,
-    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Accept',
-      'Origin',
-      'X-Requested-With',
-    ],
-    credentials: true, // só habilite se for realmente necessário (cookies/credenciais)
+    origin: (origin, callback) => {
+      if (!origin || vercelRegex.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    credentials: true,
   });
+  
   app.enableCors({
     origin: 'https://skillshare-manager.vercel.app',
     methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
