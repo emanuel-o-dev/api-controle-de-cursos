@@ -34,13 +34,13 @@ async function bootstrap() {
 
   // Gera o arquivo swagger.json
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
-
-  app.enableCors({
-    origin: ['*'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    credentials: true,
-  });
-
+  
+  app.use(cors({
+  origin: 'https://skillshare-manager-r6mnzkjim-emanuels-projects-473dcea2.vercel.app',
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
+  credentials: true // se usar cookies / credentials
+}));
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
