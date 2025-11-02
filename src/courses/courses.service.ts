@@ -27,7 +27,9 @@ export class CoursesService {
         },
       });
     } catch (error) {
-      throw new CustomException(error.message);
+      throw new CustomException(
+        error instanceof Error ? error.message : 'Erro ao criar curso',
+      );
     }
   }
 
@@ -54,6 +56,17 @@ export class CoursesService {
           select: {
             name: true,
             email: true,
+          },
+        },
+        Enrollment: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
           },
         },
       },
@@ -122,7 +135,10 @@ export class CoursesService {
       });
       return { message: 'Inscrição cancelada com sucesso.' };
     } catch (error) {
-      throw new CustomException('Erro ao cancelar inscrição: ' + error.message);
+      throw new CustomException(
+        'Erro ao cancelar inscrição: ' +
+          (error instanceof Error ? error.message : 'Erro desconhecido'),
+      );
     }
   }
 }
