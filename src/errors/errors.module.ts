@@ -4,6 +4,6 @@ import { ErrorsService } from './errors.service';
 
 @Module({
   controllers: [ErrorsController],
-  providers: [ErrorsService]
+  providers: [ErrorsService],
 })
 export class ErrorsModule {}
