@@ -60,7 +60,7 @@ PORT=3000
 
 ### OU
 
-Tennho um banco de dados hospedado utilizando serviços gratuitos, então pode estar indisponível em algum momento.
+Tenho um banco de dados hospedado utilizando serviços gratuitos, então pode estar indisponível em algum momento.
 
 ```bash
 cp .env.example .env
@@ -78,7 +78,7 @@ npm run start:dev
 
 ## Diagrama de Entidade-Relacionamento (ERD)
 
-![ERD](https://imgur.com/a/vPEORsH)
+![diagram_page-0001](https://github.com/user-attachments/assets/7c4b8054-bb27-42e6-89e5-2f18ab4c87ee)
 
 ---
 
