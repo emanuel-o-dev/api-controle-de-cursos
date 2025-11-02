@@ -21,7 +21,6 @@ import {
 import { HttpExceptionFilter } from 'src/filters/http-exception/http-exception.filter';
 import { ResponseInterceptor } from 'src/interceptors/response/response.interceptor';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from '@prisma/client';
 import { Roles } from 'src/auth/decorators/roles.decorator';
@@ -72,9 +71,9 @@ export class UsersController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateUserDto,
-    @Request() req,
+    @Request() req: Request & { user: { userId: number; role: Role } },
   ) {
-    if (req.user.role === Role.USER && req.user.id !== id) {
+    if (req.user.role === Role.USER && req.user.userId !== id) {
       throw new ForbiddenException('Usuário não pode alterar outro perfil');
     }
     return this.userService.update(id, dto);

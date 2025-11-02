@@ -6,13 +6,12 @@ import {
   HttpStatus,
   UseGuards,
   Get,
-  Req,
+  Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -92,8 +91,13 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('perfil')
   @ApiBearerAuth()
-  async getPerfil(@Req() request) {
-    const usuarioLogado = request.user;
+  getPerfil(
+    @Request()
+    req: {
+      user: { userId: number; email: string; role: string };
+    },
+  ) {
+    const usuarioLogado = req.user;
     return {
       message: 'Você acessou uma rota protegida!',
       user: usuarioLogado,
