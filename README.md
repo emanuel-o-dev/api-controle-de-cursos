@@ -66,6 +66,13 @@ Tenho um banco de dados hospedado utilizando serviços gratuitos, então pode es
 cp .env.example .env
 ```
 
+Observação: este projeto usa `@nestjs/config` com validação de variáveis de ambiente (Joi). As variáveis obrigatórias para o bootstrap são:
+
+- `JWT_SECRET` (string, mínimo 10 caracteres)
+- `DATABASE_URL` (string)
+
+Copie `.env.example` para `.env` e preencha os valores antes de rodar a aplicação localmente.
+
 ### Execução
 
 Para rodar a API localmente:
@@ -117,7 +124,7 @@ A documentação interativa da API pode ser acessada em:
 - [x] ID14: Integração do Swagger
 - [x] ID15: Deploy em plataforma de nuvem
 - [x] ID16: Funcionamento da API em produção
-- [ ] ID17: Configuração de variáveis de ambiente via ConfigModule
+- [x] ID17: Configuração de variáveis de ambiente via ConfigModule
 - [ ] ID18: Versionamento da API
 
 ### RA5 - Autenticação, Autorização e Segurança
