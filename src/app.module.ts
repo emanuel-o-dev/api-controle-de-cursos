@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SharedModule } from './shared/shared.module';
@@ -25,7 +25,7 @@ import { AdminModule } from './admin/admin.module';
     AdminModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UsersService, ConfigService],
+  providers: [AppService, UsersService],
 })
 // O que faz esse módulo?
 // Este módulo é o módulo raiz da aplicação, onde todos os outros módulos são importados e configurados.

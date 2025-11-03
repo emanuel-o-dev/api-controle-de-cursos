@@ -9,8 +9,8 @@ import {
   ParseIntPipe,
   UseInterceptors,
   UseGuards,
+  Request,
 } from '@nestjs/common';
-import { Request as ExpressRequest } from 'express';
 import {
   ApiTags,
   ApiOperation,
@@ -62,7 +62,7 @@ export class CoursesController {
   @ApiBearerAuth()
   async create(
     @Body() createCourseDto: CreateCourseDto,
-    @Param('req') req: ExpressRequest & { user: { userId: number } },
+    @Request() req: Request & { user: { userId: number } },
   ) {
     if (!createCourseDto.code || !createCourseDto.description) {
       throw new CustomException('Campos obrigatórios ausentes.');
@@ -106,7 +106,7 @@ export class CoursesController {
   @ApiResponse({ status: 201, description: 'Usuário matriculado com sucesso.' })
   async enroll(
     @Param('id', ParseIntPipe) courseId: number,
-    @Param('req') req: ExpressRequest & { user: { userId: number } },
+    @Request() req: Request & { user: { userId: number } },
   ) {
     const studentId = req.user.userId;
     return await this.coursesService.enrollStudent(courseId, studentId);
@@ -121,7 +121,7 @@ export class CoursesController {
   @ApiBearerAuth()
   async unenroll(
     @Param('id', ParseIntPipe) courseId: number,
-    @Param('req') req: ExpressRequest & { user: { userId: number } },
+    @Request() req: Request & { user: { userId: number } },
   ) {
     const studentId = req.user.userId;
     return await this.coursesService.unenrollStudent(courseId, studentId);
