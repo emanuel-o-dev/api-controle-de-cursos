@@ -6,7 +6,8 @@
 
 ## Descrição do Projeto
 
-Esta API foi desenvolvida como parte do curso de Tecnologia em Sistemas para Internet, utilizando o framework **NestJS**. O objetivo do projeto é fornecer uma API funcional com persistência de dados, autenticação, autorização, testes automatizados e documentação Swagger. A API inclui operações CRUD e segue boas práticas de arquitetura modular e segurança.
+Esta API fornece uma plataforma para gerenciamento de cursos e usuários, permitindo o cadastro, atualização, exclusão e matrícula em cursos.
+O sistema foi desenvolvido em NestJS, com autenticação via JWT e documentação automatizada no Swagger, servindo como base para uma aplicação web integrada.
 
 ## Link para a API em Produção
 
