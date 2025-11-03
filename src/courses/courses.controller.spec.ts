@@ -1,37 +1,36 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
-import { LoggingInterceptor } from '../interceptors/logging/logging.interceptor';
-import { LoggerMiddleware } from '../middlewares/logger/logger.middleware';
 import { PrismaService } from '../prisma/prisma.service';
-jest.mock('@prisma/client', () => {
-  class PrismaClient {
-    async $connect() {}
-    async $disconnect() {}
-  }
-  return { PrismaClient };
-});
-jest.mock('./courses.controller', () => {
-  return { CoursesController: class {} };
-});
-const { CoursesController } = require('./courses.controller');
+
 describe('CoursesController', () => {
-  let controller: typeof CoursesController;
+  let controller: CoursesController;
+
+  const mockCoursesService = {
+    findAll: jest.fn().mockResolvedValue([]),
+  };
+
+  const mockPrismaService = {};
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CoursesController],
       providers: [
-        CoursesService,
-        LoggingInterceptor,
-        LoggerMiddleware,
-        PrismaService,
+        { provide: CoursesService, useValue: mockCoursesService },
+        { provide: PrismaService, useValue: mockPrismaService },
       ],
     }).compile();
 
-    controller = module.get<typeof CoursesController>(CoursesController);
+    controller = module.get<CoursesController>(CoursesController);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('findAll should return an array', async () => {
+    const result = await controller.findAll();
+    expect(result).toEqual([]);
+    expect(mockCoursesService.findAll).toHaveBeenCalled();
   });
 });

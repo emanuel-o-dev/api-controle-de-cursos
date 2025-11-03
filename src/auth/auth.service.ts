@@ -41,10 +41,9 @@ export class AuthService {
         name: name,
         age: age,
       },
+      omit: { password: true },
     });
-    // Retorna o usuário criado (sem a senha)
-    const { password: _password, ...safeUser } = user;
-    return safeUser;
+    return user;
   }
 
   // Método de login: valida credenciais e retorna JWT
