@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
 import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
 import { ResponseInterceptor } from './interceptors/response/response.interceptor';
@@ -48,6 +49,8 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  const configService = app.get(ConfigService);
+  const port = Number(configService.get<number | string>('PORT')) || 3000;
+  await app.listen(port);
 }
 void bootstrap();
